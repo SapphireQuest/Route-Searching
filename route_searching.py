@@ -44,15 +44,19 @@ def bfs(start_city):
         current_city, path, cost = queue.popleft()
 
         if len(path) == NUM_OF_CITIES:
-            if cost < min_cost:
-                min_cost = cost
-                best_path = path
+            return_cost = distances[current_city][start_city]
+            if return_cost != float("inf"):
+                cost += return_cost
+                if cost < min_cost:
+                    min_cost = cost
+                    best_path = path
             continue
         for next_city in range(NUM_OF_CITIES):
             if next_city not in path and distances[current_city][next_city] != float("inf"):
                 new_cost = cost + distances[current_city][next_city]
                 new_path = path + [next_city]
                 queue.append((next_city, new_path, new_cost))
+
     print("=== BFS Search Result ===")
     print(f"Best path: {best_path}")
     print(f"Minimum cost: {min_cost}")
