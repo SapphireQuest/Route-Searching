@@ -104,9 +104,27 @@ def dfs(start_city):
     print(" ")
 
 
-def mst():
+def build_mst():
     visited_cities = {0}
+    mst_edges = []
 
+    while len(visited_cities) < NUM_OF_CITIES:
+        min_edge_cost = float("inf")
+        best_edge = None
+
+        for current_city in visited_cities:
+            for next_city in range(NUM_OF_CITIES):
+                if next_city not in visited_cities and distances[current_city][next_city] < min_edge_cost:
+                        min_edge_cost = distances[current_city][next_city]
+                        best_edge = (current_city, next_city) 
+
+        if best_edge:
+            city_a, city_b = best_edge
+            visited_cities.add(city_b)
+            mst_edges.append((city_a, city_b))
+        else:
+            return None
+    return mst_edges
 
 def main():
     defineCities()
@@ -125,7 +143,14 @@ def main():
     print(f"BFS Execution Time: {end_time_bfs - start_time_bfs} seconds")
     print(f"DFS Execution Time: {end_time_dfs - start_time_dfs} seconds")
 
-
+    mst_result = build_mst()
+    print("=== MST Result ===")
+    print("Edges in MST:")
+    if mst_result:
+        for edge in mst_result:
+            print(f"City {edge[0]} <-> City {edge[1]}")
+    else:
+        print("No valid MST found.")
 
 
 if __name__ == "__main__":
