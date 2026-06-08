@@ -126,6 +126,17 @@ def build_mst():
             return None
     return mst_edges
 
+def walk_mst(mst_edges, start_city):
+        
+
+def mst():
+    mst_edges = build_mst()
+    if mst_edges is None:
+        print("No valid MST found.")
+        return
+
+
+
 def main():
     defineCities()
     buildRoutes()
@@ -143,14 +154,7 @@ def main():
     print(f"BFS Execution Time: {end_time_bfs - start_time_bfs} seconds")
     print(f"DFS Execution Time: {end_time_dfs - start_time_dfs} seconds")
 
-    mst_result = build_mst()
-    print("=== MST Result ===")
-    print("Edges in MST:")
-    if mst_result:
-        for edge in mst_result:
-            print(f"City {edge[0]} <-> City {edge[1]}")
-    else:
-        print("No valid MST found.")
+    
 
 
 if __name__ == "__main__":
