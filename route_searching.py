@@ -219,7 +219,7 @@ def greedySearch(start_city):
 def bidirectionalSearch(start_city, target_city):
     if start_city == target_city:
         print("Start and target cities are the same.")
-        return
+        return [start_city]
     
     queue_start = deque([start_city])
     queue_end = deque([target_city])
