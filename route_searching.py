@@ -127,17 +127,60 @@ def build_mst():
     return mst_edges
 
 def walk_mst(mst_edges, start_city):
+    tree = {}
+    for i in range(NUM_OF_CITIES):
+        tree[i] = []
+    for city_a, city_b in mst_edges:
+        tree[city_a].append(city_b)
+        tree[city_b].append(city_a)
+
+    tsp_path = []
+    visited = set()
+    stack = [start_city]
+
+    while stack:
+        current_city = stack.pop()
         
+        if current_city not in visited:
+            visited.add(current_city)
+            tsp_path.append(current_city)
+        
+            for neighbor in tree[current_city]:
+                if neighbor not in visited:
+                    stack.append(neighbor)
+                    
+    return tsp_path
 
 def mst():
     mst_edges = build_mst()
     if mst_edges is None:
         print("No valid MST found.")
         return
+    
+    tsp_path = walk_mst(mst_edges, 0)
+    total_cost = 0.0
 
+    for i in range(len(tsp_path) - 1):
+        one_step_cost = distances[tsp_path[i]][tsp_path[i + 1]]
+        if one_step_cost == float("inf"):
+            print("No valid path between cities.")
+            return
+        total_cost += one_step_cost
 
+    last_city = tsp_path[-1]
+    if distances[last_city][0] != float("inf"):
+        total_cost += distances[last_city][0]
+        tsp_path.append(0)
+    else:
+        print("No valid return path to the starting city.")
+        return 
+    print("==== MST  Result ===")
+    print(f"TSP path: {tsp_path}")
+    print(f"Total cost: {total_cost}")
+    print("=====================")
 
 def main():
+
     defineCities()
     buildRoutes()
     print("=== Map of Cities ===")
@@ -153,9 +196,12 @@ def main():
 
     print(f"BFS Execution Time: {end_time_bfs - start_time_bfs} seconds")
     print(f"DFS Execution Time: {end_time_dfs - start_time_dfs} seconds")
+    print(" ")
 
-    
-
+    start_time_mst = time.time()
+    mst()
+    end_time_mst = time.time()
+    print(f"MST Execution Time: {end_time_mst - start_time_mst} seconds")
 
 if __name__ == "__main__":
     main()
