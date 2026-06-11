@@ -175,9 +175,45 @@ def mst():
         print("No valid return path to the starting city.")
         return 
     print("==== MST  Result ===")
-    print(f"TSP path: {tsp_path}")
+    print(f"Best path: {tsp_path}")
     print(f"Total cost: {total_cost}")
     print("=====================")
+
+def greedySearch(start_city):
+    current_city = start_city
+    visited = {start_city}
+    tsp_path = [start_city]
+    total_cost = 0.0
+
+    while len(visited) < NUM_OF_CITIES:
+        best_next_city = None
+        min_cost = float("inf")
+
+        for next_city in range(NUM_OF_CITIES):
+            if next_city not in visited and distances[current_city][next_city] < min_cost:
+                min_cost = distances[current_city][next_city]
+                best_next_city = next_city
+
+        if best_next_city is None:
+            print("No valid path found.")
+            return
+        
+        visited.add(best_next_city)
+        tsp_path.append(best_next_city)
+        total_cost += min_cost
+        current_city = best_next_city
+
+    return_cost = distances[current_city][start_city]
+    if return_cost == float("inf"):
+        print("No valid return path to the starting city.")
+        return
+    total_cost += return_cost
+    tsp_path.append(start_city)
+
+    print("==== Greedy Search Result ====")
+    print(f"Best path: {tsp_path}")
+    print(f"Total cost: {total_cost}")
+    print("=============================")
 
 def main():
 
@@ -201,7 +237,15 @@ def main():
     start_time_mst = time.time()
     mst()
     end_time_mst = time.time()
+
+    start_time_greedy = time.time()
+    greedySearch(0)
+    end_time_greedy = time.time()
+
     print(f"MST Execution Time: {end_time_mst - start_time_mst} seconds")
+    print(f"Greedy Search Execution Time: {end_time_greedy - start_time_greedy} seconds")  
+    print(" ")
+
 
 if __name__ == "__main__":
     main()
