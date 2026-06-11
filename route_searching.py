@@ -215,6 +215,54 @@ def greedySearch(start_city):
     print(f"Total cost: {total_cost}")
     print("=============================")
 
+
+def bidirectionalSearch(start_city, target_city):
+    if start_city == target_city:
+        print("Start and target cities are the same.")
+        return
+    
+    queue_start = deque([start_city])
+    queue_end = deque([target_city])
+
+    visited_start = {start_city: [start_city]}
+    visited_end = {target_city: [target_city]}
+
+    while queue_start and queue_end:
+        current_start = queue_start.popleft()
+        for next_city in range(NUM_OF_CITIES):
+            if distances[current_start][next_city] != float("inf") and next_city not in visited_start:
+                visited_start[next_city] = visited_start[current_start] + [next_city]
+                queue_start.append(next_city)
+                if next_city in visited_end:
+                    return visited_start[next_city] + visited_end[next_city][::-1][1:]
+
+        current_end = queue_end.popleft()
+        for next_city in range(NUM_OF_CITIES):
+            if distances[current_end][next_city] != float("inf") and next_city not in visited_end:
+                visited_end[next_city] = visited_end[current_end] + [next_city]
+                queue_end.append(next_city)
+                if next_city in visited_start:
+                    return visited_start[next_city] + visited_end[next_city][::-1][1:]
+    return None
+
+def bidirectionalSearchWithCost(start_city, target_city):
+    path = bidirectionalSearch(start_city, target_city)
+    if path is None:
+        print("No valid path found.")
+        return
+    total_cost = 0.0
+    for i in range(len(path) - 1):
+        step_cost = distances[path[i]][path[i + 1]]
+        if step_cost == float("inf"):
+            print("No valid path between cities.")
+            return
+        total_cost += step_cost
+
+    print("====== Bidirectional Search Result =====")
+    print(f"Best path: {path}")
+    print(f"Total cost: {total_cost}")
+    print("=====================================")
+
 def main():
 
     defineCities()
@@ -246,6 +294,9 @@ def main():
     print(f"Greedy Search Execution Time: {end_time_greedy - start_time_greedy} seconds")  
     print(" ")
 
-
+    start_time_bdir = time.time()
+    bidirectionalSearchWithCost(0, NUM_OF_CITIES - 1)
+    end_time_bdir = time.time()
+    print(f"Bidirectional Search Execution Time: {end_time_bdir - start_time_bdir} seconds")
 if __name__ == "__main__":
     main()
